@@ -1,15 +1,19 @@
-import React, { Component } from 'react';
-import {DatePicker} from 'antd'
+import React from 'react';
+import moment from 'moment';
 import 'antd/dist/antd.css';
-
-import moment from 'moment';
+import {DatePicker} from 'antd'
 const RangePicker = DatePicker.RangePicker;
 
-class App extends Component {
-
-
+class App extends React.Component {
+    constructor (props) {
+        super(props)
+        this.state = {
+            time: moment()
+        };
+        this.handleChange = this.handleChange.bind(this);
+    }
     getNowFormatDate=()=> {
-        let date=new Date();
+        let date=this.state.time;
         let seperator1 = "-";
         let year = date.getFullYear();
         let month = date.getMonth() + 1;
@@ -25,25 +29,28 @@ class App extends Component {
 
     }
 
-
+    handleChange(date) {
+        const  time =date.getNowFormatDate();
+        this.setState({
+           time
+        });
+    }
     render(){
-    return (
-        <div>
-
-            <RangePicker
-            ranges={{ Today: [moment(), moment()], 'This Month': [moment(), moment().endOf('month')] }}
-            showTime
-            format="YYYY-MM-DD "
-            />
-            <br/>
-
-            <DatePicker renderExtraFooter={() => 'extra footer'}
-
-            />
-            <span>当前日期为：{this.getNowFormatDate()} </span>
-        </div>
-    );
-  }
+        return (
+            <div>
+                <RangePicker
+                    ranges={{ Today: [moment(), moment()], 'This Month': [moment(), moment().endOf('month')] }}
+                    showTime
+                    format="YYYY-MM-DD "
+                />
+                <br/>
+                <DatePicker renderExtraFooter={() => 'extra footer'}
+                             selected={this.state.time}
+                             onChange={this.handleChange}/>
+                <span>当前日期为：{this.state.time} </span>
+            </div>
+        );
+    }
 }
 
 export default App;
